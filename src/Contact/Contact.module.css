@@ -1,0 +1,99 @@
+.header {
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+  padding: 8px;
+}
+p {
+  font-size: 20px;
+  animation-name: color_change;
+  animation-duration: 10s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+@-webkit-keyframes color_change {
+  0% {
+    color: blue;
+  }
+  25% {
+    color: orange;
+  }
+  50% {
+    color: purple;
+  }
+  75% {
+    color: black;
+  }
+  100% {
+    color: red;
+  }
+}
+@-moz-keyframes color_change {
+  0% {
+    color: blue;
+  }
+  25% {
+    color: orange;
+  }
+  50% {
+    color: purple;
+  }
+  75% {
+    color: black;
+  }
+  100% {
+    color: red;
+  }
+}
+@-ms-keyframes color_change {
+  0% {
+    color: blue;
+  }
+  25% {
+    color: orange;
+  }
+  50% {
+    color: purple;
+  }
+  75% {
+    color: black;
+  }
+  100% {
+    color: red;
+  }
+}
+@-o-keyframes color_change {
+  0% {
+    color: blue;
+  }
+  25% {
+    color: orange;
+  }
+  50% {
+    color: purple;
+  }
+  75% {
+    color: black;
+  }
+  100% {
+    color: red;
+  }
+}
+@keyframes color_change {
+  0% {
+    color: blue;
+  }
+  25% {
+    color: orange;
+  }
+  50% {
+    color: purple;
+  }
+  75% {
+    color: black;
+  }
+  100% {
+    color: red;
+  }
+}

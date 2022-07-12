@@ -1,3 +1,9 @@
+import SignUp from "../SignUp/SignUp.tsx";
+
 export default function Doctor() {
-  return <div>Doctor</div>;
+  return (
+    <div>
+      <SignUp type={"doctor"} />
+    </div>
+  );
 }
