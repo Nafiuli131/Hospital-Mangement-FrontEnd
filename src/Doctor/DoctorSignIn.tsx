@@ -1,7 +1,7 @@
 import styles from "../Doctor/Doctor.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function DoctorSignIn() {
+export default function DoctorSignIn(props: any) {
   const [dname, setdName] = useState<any>();
   const [dqualification, setdQualification] = useState<any>();
   const [darea, setDarea] = useState<any>();
@@ -9,6 +9,16 @@ export default function DoctorSignIn() {
   const [dPass, setdPass] = useState<any>();
   const axios = require("axios");
   const saveUrl = "http://localhost:8080/saveDoctor";
+  const editUrl = "http://localhost:8080/editDoctorInfo";
+  useEffect(() => {
+    if (props.type == "editDoctor") {
+      setdName(props.name);
+      setdEmail(props.email);
+      setDarea(props.specialization);
+      setdPass(props.password);
+      setdQualification(props.qualification);
+    }
+  }, []);
   function name(e) {
     setdName(e.target.value);
   }
@@ -33,14 +43,24 @@ export default function DoctorSignIn() {
       email: demail,
       password: dPass,
     };
-    axios
-      .post(saveUrl, doctorInfo)
-      .then((response) => {
-        alert("save successfully");
-      })
-      .catch((error) => {
-        alert("don't save successfully");
-      });
+    if (props.type == "editDoctor") {
+      axios
+        .put(
+          `${editUrl}/${demail}/${dname}/${dqualification}/${darea}/${dPass}`
+        )
+        .then((res) => {
+          alert("edit successfully");
+        });
+    } else {
+      axios
+        .post(saveUrl, doctorInfo)
+        .then((response) => {
+          alert("save successfully");
+        })
+        .catch((error) => {
+          alert("don't save successfully");
+        });
+    }
   }
 
   return (
@@ -57,6 +77,7 @@ export default function DoctorSignIn() {
               onChange={(e) => {
                 name(e);
               }}
+              value={dname}
               className="form-control mt-1"
               placeholder="Enter Name"
             />
@@ -67,6 +88,7 @@ export default function DoctorSignIn() {
               onChange={(e) => {
                 qualification(e);
               }}
+              value={dqualification}
               className="form-control mt-1"
               placeholder="Enter Qualification"
             />
@@ -77,28 +99,36 @@ export default function DoctorSignIn() {
               onChange={(e) => {
                 area(e);
               }}
+              value={darea}
               className="form-control mt-1"
               placeholder="Enter Specialized Area "
             />
           </div>
-          <div className="form-group mt-3">
-            <label>Email </label>
-            <input
-              onChange={(e) => {
-                email(e);
-              }}
-              type="email"
-              className="form-control mt-1"
-              placeholder="Enter email"
-            />
-          </div>
+          {props.type == "editDoctor" ? (
+            ""
+          ) : (
+            <div className="form-group mt-3">
+              <label>Email </label>
+              <input
+                onChange={(e) => {
+                  email(e);
+                }}
+                value={demail}
+                type="email"
+                className="form-control mt-1"
+                placeholder="Enter email"
+              />
+            </div>
+          )}
+
           <div className="form-group mt-3">
             <label>Password</label>
             <input
               onChange={(e) => {
                 password(e);
               }}
-              type="password"
+              value={dPass}
+              type={props.type == "editDoctor" ? "text" : "password"}
               className="form-control mt-1"
               placeholder="Enter password"
             />
