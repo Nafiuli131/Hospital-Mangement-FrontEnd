@@ -1,5 +1,47 @@
 import styles from "../Patient/Patient.module.css";
+import { useState } from "react";
 export default function PatientSignIn() {
+  const [pname, setpName] = useState<any>();
+  const [age, setAge] = useState<any>();
+  const [gender, setGender] = useState<any>();
+  const [pemail, setpEmail] = useState<any>();
+  const [pPass, setpPass] = useState<any>();
+  const axios = require("axios");
+  const saveUrl = "http://localhost:8080/registerPatient";
+  function getName(e) {
+    setpName(e.target.value);
+  }
+  function getAge(e) {
+    setAge(e.target.value);
+  }
+  function getGender(e) {
+    setGender(e.target.value);
+  }
+  function getEmail(e) {
+    setpEmail(e.target.value);
+  }
+  function getPassword(e) {
+    setpPass(e.target.value);
+  }
+  function postData() {
+    let postData;
+    postData = {
+      pateint_name: pname,
+      patient_gender: gender,
+      patient_age: age,
+      patient_email: pemail,
+      patient_pass: pPass,
+    };
+    console.log(postData);
+    axios
+      .post(saveUrl, postData)
+      .then((res) => {
+        alert("register patient successfully");
+      })
+      .catch((error) => {
+        alert("registration failed");
+      });
+  }
   return (
     <div className={styles.Authformcontainer}>
       <form className={styles.Authform}>
@@ -10,15 +52,33 @@ export default function PatientSignIn() {
           </div>
           <div className="form-group mt-3">
             <label>Name </label>
-            <input className="form-control mt-1" placeholder="Enter Name" />
+            <input
+              onChange={(e) => {
+                getName(e);
+              }}
+              className="form-control mt-1"
+              placeholder="Enter Name"
+            />
           </div>
           <div className="form-group mt-3">
             <label>Age </label>
-            <input className="form-control mt-1" placeholder="Enter Age" />
+            <input
+              onChange={(e) => {
+                getAge(e);
+              }}
+              className="form-control mt-1"
+              placeholder="Enter Age"
+            />
           </div>
           <div className="form-group mt-3">
             <label>Gender </label>
-            <input className="form-control mt-1" placeholder="Enter Gender" />
+            <input
+              onChange={(e) => {
+                getGender(e);
+              }}
+              className="form-control mt-1"
+              placeholder="Enter Gender"
+            />
           </div>
           {/* <div className="form-group mt-3">
             <label>Disease </label>
@@ -27,6 +87,9 @@ export default function PatientSignIn() {
           <div className="form-group mt-3">
             <label>Email </label>
             <input
+              onChange={(e) => {
+                getEmail(e);
+              }}
               type="email"
               className="form-control mt-1"
               placeholder="Enter email"
@@ -35,13 +98,16 @@ export default function PatientSignIn() {
           <div className="form-group mt-3">
             <label>Password</label>
             <input
+              onChange={(e) => {
+                getPassword(e);
+              }}
               type="password"
               className="form-control mt-1"
               placeholder="Enter password"
             />
           </div>
           <div className="d-grid gap-2 mt-3">
-            <button type="submit" className="btn btn-primary">
+            <button onClick={postData} className="btn btn-primary">
               Submit
             </button>
           </div>

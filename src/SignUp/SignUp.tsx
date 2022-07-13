@@ -3,6 +3,7 @@ import { useState } from "react";
 import DoctorSignIn from "../Doctor/DoctorSignIn.tsx";
 import PatientSignIn from "../Patient/PatientSignIn.tsx";
 import DoctorInfo from "../Doctor/DoctorInfo.tsx";
+import PatientInfo from "../Patient/PatientInfo.tsx";
 export default function SignUp(props: any) {
   const [doctor, setDoctor] = useState(false);
   const [patient, setPatient] = useState(false);
@@ -10,9 +11,12 @@ export default function SignUp(props: any) {
   const [email, setEmail] = useState<any>();
   const [password, setPassword] = useState<any>();
   const [doctorInfo, setDoctorInfo] = useState<any>(false);
+  const [patientInfo, setPatientInfo] = useState<any>(false);
   const [doctorData, setDoctorData] = useState<any>();
+  const [patientData, setPatientData] = useState<any>();
   const axios = require("axios");
   const getUrl = "http://localhost:8080/getDoctorInfo";
+  const patientUrl = "http://localhost:8080/findPatient";
   function signIn() {
     if (props.type == "doctor") {
       setDoctor(true);
@@ -31,17 +35,35 @@ export default function SignUp(props: any) {
     setPassword(e.target.value);
   }
   function submitData() {
-    axios.get(`${getUrl}/${email}/${password}`).then((res) => {
-      if (res.data) {
-        setDoctorData(res.data);
-        showDoctorInfo();
-      } else {
-        alert("No doctor found");
-      }
-    });
+    if (props.type == "doctor") {
+      axios.get(`${getUrl}/${email}/${password}`).then((res) => {
+        if (res.data) {
+          setDoctorData(res.data);
+          showDoctorInfo();
+        } else {
+          alert("No doctor found");
+        }
+      });
+    } else if (props.type == "patient") {
+      axios.get(`${patientUrl}/${email}/${password}`).then((res) => {
+        if (res.data) {
+          setPatientData(res.data);
+          showPatientInfo();
+        } else {
+          alert("No patient found");
+        }
+      });
+    }
+  }
+  function showPatientInfo() {
+    setPatientInfo(true);
+    setDoctorInfo(false);
+    setPatient(false);
+    setDoctor(false);
+    setSign(false);
   }
   function showDoctorInfo() {
-    console.log(doctorData);
+    setPatientInfo(false);
     setDoctorInfo(true);
     setPatient(false);
     setDoctor(false);
@@ -53,11 +75,15 @@ export default function SignUp(props: any) {
       {doctor ? <DoctorSignIn /> : null}
       {patient ? <PatientSignIn /> : null}
       {doctorInfo ? <DoctorInfo info={doctorData} /> : null}
+      {patientInfo ? <PatientInfo info={patientData} /> : null}
       {sign ? (
         <div className={styles.Authformcontainer}>
           <form className={styles.Authform}>
             <div className={styles.Authformcontent}>
               <h3 className={styles.Authformtitle}>Sign In</h3>
+              <h3 className={styles.Authformtitle}>
+                {props.type == "doctor" ? "Doctor Table" : "Patient Table"}
+              </h3>
               <div className="text-center">
                 Already registered?
                 <span
