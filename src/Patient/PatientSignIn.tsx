@@ -1,6 +1,6 @@
 import styles from "../Patient/Patient.module.css";
-import { useState } from "react";
-export default function PatientSignIn() {
+import { useState, useEffect } from "react";
+export default function PatientSignIn(props) {
   const [pname, setpName] = useState<any>();
   const [age, setAge] = useState<any>();
   const [gender, setGender] = useState<any>();
@@ -8,6 +8,17 @@ export default function PatientSignIn() {
   const [pPass, setpPass] = useState<any>();
   const axios = require("axios");
   const saveUrl = "http://localhost:8080/registerPatient";
+  const editUrl = "http://localhost:8080/editPatientInfo";
+  useEffect(() => {
+    if (props.type == "editPatient") {
+      setpName(props.name);
+      setAge(props.age);
+      setGender(props.gender);
+      setpEmail(props.email);
+      setpPass(props.pass);
+    }
+  }, []);
+
   function getName(e) {
     setpName(e.target.value);
   }
@@ -32,15 +43,22 @@ export default function PatientSignIn() {
       patient_email: pemail,
       patient_pass: pPass,
     };
-    console.log(postData);
-    axios
-      .post(saveUrl, postData)
-      .then((res) => {
-        alert("register patient successfully");
-      })
-      .catch((error) => {
-        alert("registration failed");
-      });
+    if (props.type == "editPatient") {
+      axios
+        .put(`${editUrl}/${pemail}/${pname}/${age}/${gender}/${pPass}`)
+        .then((res) => {
+          alert("edit successfully");
+        });
+    } else {
+      axios
+        .post(saveUrl, postData)
+        .then((res) => {
+          alert("register patient successfully");
+        })
+        .catch((error) => {
+          alert("registration failed");
+        });
+    }
   }
   return (
     <div className={styles.Authformcontainer}>
@@ -56,6 +74,7 @@ export default function PatientSignIn() {
               onChange={(e) => {
                 getName(e);
               }}
+              value={pname}
               className="form-control mt-1"
               placeholder="Enter Name"
             />
@@ -66,6 +85,7 @@ export default function PatientSignIn() {
               onChange={(e) => {
                 getAge(e);
               }}
+              value={age}
               className="form-control mt-1"
               placeholder="Enter Age"
             />
@@ -76,6 +96,7 @@ export default function PatientSignIn() {
               onChange={(e) => {
                 getGender(e);
               }}
+              value={gender}
               className="form-control mt-1"
               placeholder="Enter Gender"
             />
@@ -84,24 +105,31 @@ export default function PatientSignIn() {
             <label>Disease </label>
             <input className="form-control mt-1" placeholder="Enter Disease" />
           </div> */}
-          <div className="form-group mt-3">
-            <label>Email </label>
-            <input
-              onChange={(e) => {
-                getEmail(e);
-              }}
-              type="email"
-              className="form-control mt-1"
-              placeholder="Enter email"
-            />
-          </div>
+          {props.type == "editPatient" ? (
+            ""
+          ) : (
+            <div className="form-group mt-3">
+              <label>Email </label>
+              <input
+                onChange={(e) => {
+                  getEmail(e);
+                }}
+                value={pemail}
+                type="email"
+                className="form-control mt-1"
+                placeholder="Enter email"
+              />
+            </div>
+          )}
+
           <div className="form-group mt-3">
             <label>Password</label>
             <input
               onChange={(e) => {
                 getPassword(e);
               }}
-              type="password"
+              value={pPass}
+              type={props.type == "editPatient" ? "text" : "password"}
               className="form-control mt-1"
               placeholder="Enter password"
             />
